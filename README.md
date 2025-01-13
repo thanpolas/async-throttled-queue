@@ -111,7 +111,7 @@ When a new node version is available you need to updated it in the following:
 
 ## Release History
 
--   **v0.0.2**, _13/Jan/2025_
+-   **v0.0.1**, _13/Jan/2025_
     -   Big Bang
 
 ## License
