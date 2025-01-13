@@ -29,7 +29,7 @@ A new `dispose()` method has been added to the `throttle` instance, which will c
 ### Usage
 
 ```javascript
-const atq = require('@thanpolas/async-throttled-queue');
+const atq = require('@thanpolas/async-throttle-queue');
 
 // Create an instance of a throttled queue by specifying the maximum number
 // of requests as the first parameter, and the interval in milliseconds as the second:
@@ -50,7 +50,7 @@ console.log(throttle.queued);
 By specifying a number higher than 1 as the first parameter, you can dequeue multiple actions within the given interval:
 
 ```javascript
-const atq = require('@thanpolas/async-throttled-queue');
+const atq = require('@thanpolas/async-throttle-queue');
 const throttle = atq(10, 1000); // at most make 10 requests every second.
 
 for (let x = 0; x < 100; x++) {
@@ -66,7 +66,7 @@ for (let x = 0; x < 100; x++) {
 You can space out your actions by specifying `true` as the third (optional) parameter:
 
 ```javascript
-const atq = require('@thanpolas/async-throttled-queue');
+const atq = require('@thanpolas/async-throttle-queue');
 const throttle = atq(10, 1000, true); // at most make 10 requests every second, but evenly spaced.
 
 for (let x = 0; x < 100; x++) {
@@ -88,7 +88,7 @@ Notes:
 3. Call `dispose()` when your application is shutting down to prevent uncalled actions from being executed and halting the shutdown process.
 
 ```javascript
-const atq = require('@thanpolas/async-throttled-queue');
+const atq = require('@thanpolas/async-throttle-queue');
 
 atq.dispose();
 ```
