@@ -1,7 +1,7 @@
 {
     "private": false,
     "name": "@thanpolas/async-throttle-queue",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "main": "./src/async-throttle-queue.js",
     "description": "Asynchronously execute a queue of functions, limiting the number of concurrent executions.",
     "homepage": "https://github.com/thanpolas/async-throttle-queue",
