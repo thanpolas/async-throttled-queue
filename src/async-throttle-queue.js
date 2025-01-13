@@ -14,7 +14,7 @@
 
 const allQueues = [];
 
-exports.asyncThrottle = (maxRequestsPerInterval, interval, evenlySpaced) => {
+module.exports = (maxRequestsPerInterval, interval, evenlySpaced) => {
   /**
    * If all requests should be evenly spaced, adjust to suit.
    */
