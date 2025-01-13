@@ -1,0 +1,73 @@
+{
+    "private": false,
+    "name": "@thanpolas/async-throttle-queue",
+    "version": "0.0.0",
+    "main": "./src/async-throttle-queue.js",
+    "description": "Asynchronously execute a queue of functions, limiting the number of concurrent executions.",
+    "homepage": "https://github.com/thanpolas/async-throttle-queue",
+    "bugs": "https://github.com/thanpolas/async-throttle-queue/issues",
+    "author": {
+        "name": "Thanos Polychronakis",
+        "email": "thanpolas@gmail.com"
+    },
+    "contributors": [
+        ""
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/thanpolas/async-throttle-queue"
+    },
+    "license": "ISC",
+    "engines": {
+        "node": ">=16"
+    },
+    "scripts": {
+        "test": "npm run eslint && npm run jest",
+        "eslint": "eslint src test",
+        "jest": "TZ=utc jest --ci --coverage && codecov",
+        "release": "release-it --ci",
+        "release:minor": "release-it minor --ci",
+        "release:major": "release-it major --ci"
+    },
+    "jest": {
+        "coverageDirectory": "./coverage/",
+        "collectCoverage": true,
+        "collectCoverageFrom": [
+            "./src/*.js",
+            "./src/**/*.js"
+        ],
+        "coverageReporters": [
+            "json",
+            "html"
+        ],
+        "roots": [
+            "./test/app",
+            "./test/unit"
+        ],
+        "testEnvironment": "node",
+        "setupFilesAfterEnv": [
+            "jest-extended/all"
+        ],
+        "globalSetup": "./test/lib/global-setup.test.js",
+        "testTimeout": 10000
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/jest": "29.5.5",
+        "codecov": "^3.8.3",
+        "eslint": "8.50.0",
+        "eslint-config-airbnb-base": "15.0.0",
+        "eslint-config-prettier": "9.0.0",
+        "eslint-plugin-import": "2.28.1",
+        "eslint-plugin-jest": "27.4.2",
+        "eslint-plugin-jsdoc": "46.8.2",
+        "eslint-plugin-prettier": "5.0.0",
+        "eslint-plugin-security": "1.7.1",
+        "expect": "29.7.0",
+        "jest": "29.7.0",
+        "jest-extended": "4.0.1",
+        "jest-junit": "16.0.0",
+        "release-it": "14.11.5",
+        "prettier": "3.0.3"
+    }
+}

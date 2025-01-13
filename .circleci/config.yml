@@ -1,0 +1,54 @@
+version: 2.1
+
+workflows:
+  version: 2
+  node-multi-build:
+    jobs:
+      - node-v16
+      - node-v18
+
+jobs:
+  node-v16:
+    docker:
+      - image: node:16
+    steps:
+      - build
+  node-v18:
+    docker:
+      - image: node:18
+    steps:
+      - build
+
+commands:
+  build:
+    steps:
+      - run:
+          name: Node Version
+          command: npm version
+      - checkout
+      - restore_cache:
+          keys:
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-{{ arch }}-npm-cache-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}
+            - v{{ .Environment.CIRCLE_CACHE_VERSION }}-{{ arch }}-npm-cache-master-{{ .Environment.CIRCLE_JOB }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run Test
+          command: npm run jest
+      - run:
+          name: Run ESLINT
+          command: npm run eslint
+      - save-npm-cache
+  save-npm-lock:
+    steps:
+      - save_cache:
+          key: v{{ .Environment.CIRCLE_CACHE_VERSION }}-{{ arch }}-npm-lock-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+  save-npm-cache:
+    steps:
+      - save_cache:
+          key: v{{ .Environment.CIRCLE_CACHE_VERSION }}-{{ arch }}-npm-cache-{{ .Branch }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm/_cacache
