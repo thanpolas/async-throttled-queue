@@ -111,6 +111,8 @@ When a new node version is available you need to updated it in the following:
 
 ## Release History
 
+-   **v0.0.3**, _14/Jan/2025_
+    -   Fixed dispose() not properly being exposed.
 -   **v0.0.2**, _13/Jan/2025_
     -   Fix master export.
 -   **v0.0.1**, _13/Jan/2025_
