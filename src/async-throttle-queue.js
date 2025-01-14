@@ -14,7 +14,30 @@
 
 const allQueues = [];
 
-module.exports = (maxRequestsPerInterval, interval, evenlySpaced) => {
+/**
+ * Disposes of all queues.
+ */
+exports.dispose = () => {
+  for (const ts of allQueues) {
+    if (ts.timeout) {
+      clearTimeout(ts.timeout);
+    }
+  }
+};
+
+/**
+ * The main function that creates a new throttle queue.
+ *
+ * @param {number} maxRequestsPerInterval The maximum number of requests to execute per interval.
+ * @param {number} interval The interval in milliseconds.
+ * @param {boolean} evenlySpaced If all requests should be evenly
+ * @return {function} The throttler function.
+ */
+const atq = (module.exports = (
+  maxRequestsPerInterval,
+  interval,
+  evenlySpaced,
+) => {
   /**
    * If all requests should be evenly spaced, adjust to suit.
    */
@@ -35,7 +58,10 @@ module.exports = (maxRequestsPerInterval, interval, evenlySpaced) => {
   allQueues.push(throttleState);
 
   return exports.throttlerFn.bind(null, throttleState);
-};
+});
+
+// Attach dispose on exported fn.
+atq.dispose = exports.dispose;
 
 /**
  * Gets called at a set interval to remove items from the queue.
@@ -102,15 +128,4 @@ exports.throttlerFn = (ts, fn) => {
       }
     }
   });
-};
-
-/**
- * Disposes of all queues.
- */
-exports.dispose = () => {
-  for (const ts of allQueues) {
-    if (ts.timeout) {
-      clearTimeout(ts.timeout);
-    }
-  }
 };
