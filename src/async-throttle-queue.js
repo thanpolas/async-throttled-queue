@@ -90,7 +90,7 @@ exports.dequeue = (ts) => {
     callback();
   }
   if (ts.queue.length) {
-    ts.timeout = setTimeout(ts.dequeue.bind(null, ts), ts.interval);
+    ts.timeout = setTimeout(exports.dequeue.bind(null, ts), ts.interval);
   } else {
     ts.timeout = undefined;
   }
