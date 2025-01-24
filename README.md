@@ -24,7 +24,15 @@ For example, making network calls to popular APIs such as Twitter is subject to 
 
 Unlike the `throttle` functions of popular libraries like lodash and underscore, `throttled-queue` will not prevent any executions. Instead, every execution is placed into a queue, which will be drained at the desired rate limit.
 
-A new `dispose()` method has been added to the `throttle` instance, which will clear the queue and stop any further executions.
+## What is new
+
+With the fork of 2025, the following new features were added:
+
+1. A new `dispose()` method has been added to the `throttle` instance, which will clear the queue, delete all pending `setTimeout` commands and stop any further executions.
+2. On each queue instance, three properties were added:
+    - `length`: The total number of running functions.
+    - `queue`: The total number of queued (throttled) functions.
+    - `total`: The total number of running + queued.
 
 ### Usage
 
@@ -41,8 +49,8 @@ await throttle(() => {
     return Promise.resolve('hello!');
 });
 
-// Get the total queued functions on the throttle instance.
-console.log(throttle.queued);
+// Get the total functions on the throttle instance.
+console.log(throttle.total);
 ```
 
 ### Bursts
@@ -111,6 +119,9 @@ When a new node version is available you need to updated it in the following:
 
 ## Release History
 
+-   **v1.0.0**, _24/Jan/2025_
+    -   Added new properties `.length`, `.queue`, `.total`.
+    -   Added full test-suite.
 -   **v0.0.4**, _16/Jan/2025_
     -   Fixed bug on dequeue self invoke.
 -   **v0.0.3**, _14/Jan/2025_
