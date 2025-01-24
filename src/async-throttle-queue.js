@@ -53,11 +53,30 @@ const atq = (module.exports = (
     lastIntervalStart: 0,
     numRequestsPerInterval: 0,
     timeout: null,
+    activeRequests: 0,
   };
 
   allQueues.push(throttleState);
 
-  return exports.throttlerFn.bind(null, throttleState);
+  const throttler = exports.throttlerFn.bind(null, throttleState);
+
+  Object.defineProperty(throttler, 'length', {
+    get: () => {
+      return throttleState.activeRequests;
+    },
+  });
+  Object.defineProperty(throttler, 'queue', {
+    get: () => {
+      return throttleState.queue.length;
+    },
+  });
+  Object.defineProperty(throttler, 'total', {
+    get: () => {
+      return throttleState.queue.length + throttleState.activeRequests;
+    },
+  });
+
+  return throttler;
 });
 
 // Attach dispose on exported fn.
@@ -87,7 +106,10 @@ exports.dequeue = (ts) => {
   ts.numRequestsPerInterval = 0;
   for (const callback of ts.queue.splice(0, ts.maxRequestsPerInterval)) {
     ts.numRequestsPerInterval += 1;
-    callback();
+    ts.activeRequests += 1;
+    callback().finally(() => {
+      ts.activeRequests -= 1;
+    });
   }
   if (ts.queue.length) {
     ts.timeout = setTimeout(exports.dequeue.bind(null, ts), ts.interval);
@@ -106,7 +128,13 @@ exports.dequeue = (ts) => {
 exports.throttlerFn = (ts, fn) => {
   return new Promise((resolve, reject) => {
     const callback = () =>
-      Promise.resolve().then(fn).then(resolve).catch(reject);
+      Promise.resolve()
+        .then(fn)
+        .then(resolve)
+        .catch(reject)
+        .finally(() => {
+          ts.activeRequests -= 1;
+        });
 
     const now = Date.now();
     if (!ts.timeout && now - ts.lastIntervalStart > ts.interval) {
@@ -115,11 +143,11 @@ exports.throttlerFn = (ts, fn) => {
     }
 
     ts.numRequestsPerInterval += 1;
-    if (ts.numRequestsPerInterval < ts.maxRequestsPerInterval) {
+    if (ts.numRequestsPerInterval <= ts.maxRequestsPerInterval) {
+      ts.activeRequests += 1;
       callback();
     } else {
       ts.queue.push(callback);
-      this.queued = ts.queue.length;
       if (!ts.timeout) {
         ts.timeout = setTimeout(
           exports.dequeue.bind(null, ts),
